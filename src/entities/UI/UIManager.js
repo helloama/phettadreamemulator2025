@@ -7,12 +7,22 @@ export default class UIManager extends Component{
     }
 
     SetAmmo(mag, rest){
-        document.getElementById("current_ammo").innerText = mag;
-        document.getElementById("max_ammo").innerText = rest;
+        const currentAmmo = document.getElementById("current_ammo");
+        const maxAmmo = document.getElementById("max_ammo");
+        if(currentAmmo) currentAmmo.innerText = mag;
+        if(maxAmmo) maxAmmo.innerText = rest;
     }
 
     SetHealth(health){
-        document.getElementById("health_progress").style.width = `${health}%`;
+        const healthProgress = document.getElementById("health_progress");
+        if(healthProgress) healthProgress.style.width = `${health}%`;
+    }
+
+    SetTimer(minutes, seconds){
+        const timerElement = document.getElementById("dream_timer");
+        if (timerElement) {
+            timerElement.innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
     }
 
     Initialize(){

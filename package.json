@@ -10,11 +10,12 @@
     "webpack"
   ],
   "scripts": {
-    "start": "webpack serve",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack serve",
     "prebuild": "npx rimraf ./build && npx mkdirp ./build",
-    "build": "webpack --mode production"
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production"
   },
   "dependencies": {
+    "@pixiv/three-vrm": "^3.4.3",
     "@types/ammo.js": "github:osman-turan/ammo.js-typings",
     "ammo.js": "kripken/ammo.js",
     "three": "^0.127.0",

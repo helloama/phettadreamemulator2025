@@ -77,4 +77,20 @@ export default class PlayerPhysics extends Component{
     PhysicsUpdate(){
         this.QueryJump();
     }
+    
+    ResetPosition(x = 0, y = 2, z = 0) {
+        // Reset player position to spawn point
+        if (this.body) {
+            const transform = new Ammo.btTransform();
+            transform.setIdentity();
+            transform.setOrigin(new Ammo.btVector3(x, y, z));
+            this.body.setWorldTransform(transform);
+            
+            // Reset velocity to prevent sliding
+            this.body.setLinearVelocity(new Ammo.btVector3(0, 0, 0));
+            this.body.setAngularVelocity(new Ammo.btVector3(0, 0, 0));
+            
+            console.log('[PlayerPhysics] Player position reset to spawn point');
+        }
+    }
 }

@@ -49,7 +49,11 @@ export default class PlayerControls extends Component{
 
         Input.AddClickListner( () => {
             if(!this.isLocked){
-                document.body.requestPointerLock();
+                try {
+                    document.body.requestPointerLock();
+                } catch (error) {
+                    console.warn('[PlayerControls] Pointer lock failed:', error);
+                }
             }
         });
     }

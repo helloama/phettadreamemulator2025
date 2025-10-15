@@ -80,16 +80,120 @@
         right: 5%;
         top: 5%;
       }
+      #dream_timer{
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2em;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      
+      /* Dream Chart Button */
+      .dream-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(255, 147, 166, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+      
+      .dream-button:hover {
+        background-color: rgba(255, 147, 166, 1.0);
+        transform: scale(1.1);
+      }
+      
+      .dream-button:active {
+        transform: scale(0.95);
+      }
+      
+          /* Mobile-friendly touch targets */
+          @media (max-width: 768px) {
+            .dream-button {
+              width: 60px;
+              height: 60px;
+              font-size: 20px;
+              top: 15px;
+              right: 15px;
+              }
+          }
+          
+          /* Mode Toggle Button */
+          .mode-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(176, 132, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          }
+          
+          .mode-button:hover {
+            background-color: rgba(176, 132, 255, 1.0);
+            transform: scale(1.1);
+          }
+          
+          .mode-button:active {
+            transform: scale(0.95);
+          }
+          
+          /* Mobile-friendly touch targets */
+          @media (max-width: 768px) {
+            .mode-button {
+              width: 60px;
+              height: 60px;
+              font-size: 20px;
+              top: 15px;
+              left: 15px;
+            }
+          }
+      
+      #fade_overlay{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transition: none;
+      }
     </style>
   </head>
 
   <body>
     <div id="debug"></div>
     <div id="menu">
-      <h1>Shooter Game Demo</h1>
-      <button id="start_game">NEW GAME</button>
+      <h1>L S D</h1>
+      <div id="day_counter" style="margin-top:8px; font-size: 1.4em; color:#ff93a6; font-weight:700;">Day 001</div>
+      <button id="start_game">Start</button>
+      <button id="graph_button" style="margin-top:16px;">Graph</button>
     </div>
     <div id="game_hud">
+      <div id="dream_timer">10:00</div>
       <img id="crosshair" src="<%=require('./ui/crosshair.png')%>" />
       <div id="ammo_container">
         <span id="current_ammo">0</span>
@@ -99,8 +203,16 @@
       <div id="health_container">
         <div id="health_progress"></div>
       </div>
+      <!-- Dream Chart Button for Mobile -->
+      <button id="dream_chart_button" class="dream-button">E</button>
     </div>
+    <div id="fade_overlay"></div>
     <div id="progress"></div>
+    <!-- Dream Chart Overlay -->
+    <div id="chart_container" style="position:absolute; left:0; top:0; width:100%; height:100%; background:#0f0730; visibility:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+      <canvas id="chart_canvas" width="640" height="360" style="border:2px solid rgba(255,255,255,0.2);"></canvas>
+      <button id="chart_return" style="margin-top:16px;">Return</button>
+    </div>
     <my-app></my-app>
   </body>
 </html>

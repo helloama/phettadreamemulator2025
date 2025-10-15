@@ -12,7 +12,6 @@ import {AmmoHelper, Ammo, createConvexHullShape} from './AmmoLib'
 import EntityManager from './EntityManager'
 import Entity from './Entity'
 import Sky from './entities/Sky/Sky2'
-import LevelSetup from './entities/Level/LevelSetup'
 import PlayerControls from './entities/Player/PlayerControls'
 import PlayerPhysics from './entities/Player/PlayerPhysics'
 import Stats from 'three/examples/jsm/libs/stats.module'
@@ -20,7 +19,6 @@ import {  FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import {  GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import {  OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import {  SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils'
-import NpcCharacterController from './entities/NPC/CharacterController'
 import Input from './Input'
 
 import level from './assets/level.glb'
@@ -56,15 +54,50 @@ import decalAlpha from './assets/decals/decal_a.jpg'
 import skyTex from './assets/sky.jpg'
 
 import DebugDrawer from './DebugDrawer'
+
+// FPS Components
+import LevelSetup from './entities/Level/LevelSetup'
 import Navmesh from './entities/Level/Navmesh'
-import AttackTrigger from './entities/NPC/AttackTrigger'
-import DirectionDebug from './entities/NPC/DirectionDebug'
-import CharacterCollision from './entities/NPC/CharacterCollision'
-import Weapon from './entities/Player/Weapon'
-import UIManager from './entities/UI/UIManager'
-import AmmoBox from './entities/AmmoBox/AmmoBox'
 import LevelBulletDecals from './entities/Level/BulletDecals'
+import Weapon from './entities/Player/Weapon'
 import PlayerHealth from './entities/Player/PlayerHealth'
+import NpcCharacterController from './entities/NPC/CharacterController'
+import AttackTrigger from './entities/NPC/AttackTrigger'
+import CharacterCollision from './entities/NPC/CharacterCollision'
+import DirectionDebug from './entities/NPC/DirectionDebug'
+import AmmoBox from './entities/AmmoBox/AmmoBox'
+import UIManager from './entities/UI/UIManager'
+
+// Dream Session System
+import DreamSession from './entities/DreamSession/DreamSession'
+import SessionState from './entities/DreamSession/SessionState'
+import FadeEffect from './entities/DreamSession/FadeEffect'
+
+// UI System
+import MenuUI from './entities/UI/MenuUI'
+import DreamChartUI from './entities/UI/DreamChartUI'
+
+// Zone System
+import ZoneManager from './entities/Zones/ZoneManager'
+
+// Dream Environment System
+import DreamEnvironmentModifier from './entities/DreamEnvironment/DreamEnvironmentModifier'
+import MoodTracker from './entities/MoodTracker/MoodTracker'
+
+// Audio-Visual Enhancement System
+import DreamAudioSystem from './entities/Audio/DreamAudioSystem'
+import DreamVisualEffects from './entities/VisualEffects/DreamVisualEffects'
+
+// Dream Logic System (inspired by LSD Revamped)
+import DreamLogicEngine from './entities/DreamLogic/DreamLogicEngine'
+import RealityDistortion from './entities/DreamLogic/RealityDistortion'
+
+// LSD Dream Emulator Core System
+import MoodGraph from './entities/LSD/MoodGraph'
+import SceneLinker from './entities/LSD/SceneLinker'
+
+// VRM Avatar System for Phettaverse Characters
+import VRMAvatarSystem from './entities/VRM/VRMAvatarSystem'
 
 class FPSGameApp{
 
@@ -94,6 +127,11 @@ class FPSGameApp{
 
     this.camera = new THREE.PerspectiveCamera();
     this.camera.near = 0.01;
+
+    // Make scene, camera, and renderer globally available for dream components
+    window.scene = this.scene;
+    window.camera = this.camera;
+    window.renderer = this.renderer;
 
     // create an AudioListener and add it to the camera
     this.listener = new THREE.AudioListener();
@@ -247,6 +285,7 @@ class FPSGameApp{
   EntitySetup(){
     this.entityManager = new EntityManager();
 
+    // Original FPS Level Setup
     const levelEntity = new Entity();
     levelEntity.SetName('Level');
     levelEntity.AddComponent(new LevelSetup(this.assets['level'], this.scene, this.physicsWorld));
@@ -284,11 +323,6 @@ class FPSGameApp{
       this.entityManager.Add(npcEntity);
     });
 
-    const uimanagerEntity = new Entity();
-    uimanagerEntity.SetName("UIManager");
-    uimanagerEntity.AddComponent(new UIManager());
-    this.entityManager.Add(uimanagerEntity);
-
     const ammoLocations = [
        [14.37, 0.0, 10.45],
        [32.77, 0.0, 33.84],
@@ -301,6 +335,64 @@ class FPSGameApp{
       box.SetPosition(new THREE.Vector3(loc[0], loc[1], loc[2]));
       this.entityManager.Add(box);
     });
+
+    const uimanagerEntity = new Entity();
+    uimanagerEntity.SetName("UIManager");
+    uimanagerEntity.AddComponent(new UIManager());
+    this.entityManager.Add(uimanagerEntity);
+
+    // Menu + Chart UI entity
+    const menuEntity = new Entity();
+    menuEntity.SetName("Menu");
+    menuEntity.AddComponent(new DreamChartUI());
+    menuEntity.AddComponent(new MenuUI());
+    this.entityManager.Add(menuEntity);
+
+    // Dream Session Manager
+    const dreamEntity = new Entity();
+    dreamEntity.SetName("DreamManager");
+    dreamEntity.AddComponent(new SessionState());
+    dreamEntity.AddComponent(new DreamSession());
+    dreamEntity.AddComponent(new FadeEffect());
+    this.entityManager.Add(dreamEntity);
+
+    // Zone Manager
+    const zoneEntity = new Entity();
+    zoneEntity.SetName("Zones");
+    zoneEntity.AddComponent(new ZoneManager(this.scene));
+    this.entityManager.Add(zoneEntity);
+
+    // Dream Environment System
+    const dreamEnvironmentEntity = new Entity();
+    dreamEnvironmentEntity.SetName("DreamEnvironment");
+    dreamEnvironmentEntity.AddComponent(new DreamEnvironmentModifier());
+    dreamEnvironmentEntity.AddComponent(new MoodTracker());
+    dreamEnvironmentEntity.AddComponent(new DreamAudioSystem());
+    // Temporarily disable visual effects to fix black screen
+    // dreamEnvironmentEntity.AddComponent(new DreamVisualEffects());
+    this.entityManager.Add(dreamEnvironmentEntity);
+
+        // Dream Logic System (inspired by LSD Revamped)
+        const dreamLogicEntity = new Entity();
+        dreamLogicEntity.SetName("DreamLogic");
+        dreamLogicEntity.AddComponent(new DreamLogicEngine());
+        dreamLogicEntity.AddComponent(new RealityDistortion());
+        this.entityManager.Add(dreamLogicEntity);
+
+        // LSD Dream Emulator Core System
+        const lsdCoreEntity = new Entity();
+        lsdCoreEntity.SetName("LSDCore");
+        lsdCoreEntity.AddComponent(new MoodGraph());
+        lsdCoreEntity.AddComponent(new SceneLinker());
+        this.entityManager.Add(lsdCoreEntity);
+
+        // VRM Avatar System for Phettaverse Characters
+        const vrmAvatarEntity = new Entity();
+        vrmAvatarEntity.SetName("VRMAvatars");
+        vrmAvatarEntity.AddComponent(new VRMAvatarSystem());
+        this.entityManager.Add(vrmAvatarEntity);
+
+    // Removed ammo boxes for dream mode
 
     this.entityManager.EndSetup();
 
